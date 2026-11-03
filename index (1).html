@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Keisha Wallet</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#ff9eb5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Keisha Wallet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800&display=swap">
+<style>
+:root{--pink:#ff8fab;--peach:#ffc2a1;--bg:#fff6f2;--ink:#5a3942;--mute:#a58a8f;--line:#f6e1dc;--ok:#6fbf9a;--bad:#e5677d;--warn:#f0a15a}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:500 16px/1.4 Nunito,"Segoe UI",system-ui,sans-serif;padding:env(safe-area-inset-top) 0 110px}
+main{max-width:480px;margin:0 auto;padding:16px}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0}
+:focus-visible{outline:3px solid var(--pink);outline-offset:2px}
+.hidden{display:none!important}
+.card{background:#fff;border-radius:22px;padding:16px;margin-top:14px;box-shadow:0 4px 18px rgba(255,143,171,.12)}
+h1{font-size:26px;margin:0;font-weight:800}
+h2{font-size:17px;margin:0 0 10px;font-weight:800}
+.mute{color:var(--mute);font-size:14px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.icon-btn{background:#fff;border-radius:50%;width:42px;height:42px;font-size:18px;box-shadow:0 4px 12px rgba(255,143,171,.18)}
+.seg{display:flex;background:#fff;border-radius:999px;padding:4px;margin-top:14px;box-shadow:0 4px 12px rgba(255,143,171,.12)}
+.seg button{flex:1;background:none;border-radius:999px;padding:9px;font-weight:700;color:var(--mute)}
+.seg button.on{background:linear-gradient(135deg,var(--pink),var(--peach));color:#fff}
+.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:14px}
+.stat{background:#fff;border-radius:18px;padding:12px 8px;text-align:center;box-shadow:0 4px 12px rgba(255,143,171,.1)}
+.stat b{display:block;font-size:15px;font-weight:800;margin-top:2px}
+.stat.main{background:linear-gradient(135deg,var(--pink),var(--peach));color:#fff}
+.stat.main .mute{color:#fff}
+.bar{height:12px;background:var(--line);border-radius:99px;overflow:hidden;margin:8px 0}
+.bar i{display:block;height:100%;border-radius:99px;background:var(--ok);transition:width .4s}
+.nudge{font-size:15px;margin:6px 0 0}
+.donut{display:flex;gap:14px;align-items:center}
+.donut svg{width:150px;height:150px;flex:none}
+.legend{flex:1;font-size:14px;min-width:0}
+.legend div{display:flex;align-items:center;gap:6px;padding:2px 0}
+.legend span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dot{width:10px;height:10px;border-radius:50%;flex:none}
+.jar-row{display:flex;gap:16px;align-items:center}
+.jar{width:60px;height:78px;border:3px solid var(--pink);border-radius:10px 10px 22px 22px;position:relative;overflow:hidden;flex:none;background:#fff}
+.jar i{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(var(--peach),var(--pink));transition:height .5s}
+.jar-row>div:last-child{flex:1}
+.row{display:flex;align-items:center;gap:10px;width:100%;background:none;text-align:left;padding:10px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border:0}
+.row .t{flex:1;min-width:0}
+.row .t b{display:block;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.amt{font-weight:800;white-space:nowrap}
+.in{color:var(--ok)}.jarc{color:var(--pink)}
+.fab{position:fixed;right:max(16px,calc(50% - 224px));bottom:calc(20px + env(safe-area-inset-bottom));background:linear-gradient(135deg,var(--pink),var(--peach));color:#fff;border-radius:999px;padding:15px 24px;font-weight:800;box-shadow:0 8px 22px rgba(255,143,171,.5)}
+.link{background:none;color:var(--pink);font-weight:700;padding:4px 0}
+.shade{position:fixed;inset:0;background:rgba(90,57,66,.4);display:flex;align-items:flex-end;justify-content:center;z-index:5}
+.sheet{background:#fff;width:100%;max-width:480px;border-radius:26px 26px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom));max-height:92vh;overflow:auto;animation:up .25s}
+@keyframes up{from{transform:translateY(40px);opacity:0}}
+@media (prefers-reduced-motion:reduce){.sheet{animation:none}.bar i,.jar i{transition:none}}
+label{display:block;font-weight:700;font-size:14px;margin:12px 0 4px}
+input,select{width:100%;padding:12px 14px;border:2px solid var(--line);border-radius:14px;background:#fff}
+input:focus,select:focus{border-color:var(--pink);outline:0}
+.btn{width:100%;padding:14px;border-radius:16px;font-weight:800;margin-top:16px;background:linear-gradient(135deg,var(--pink),var(--peach));color:#fff}
+.btn.ghost{background:#fff;color:var(--mute);margin-top:6px}
+.btn.del{background:#fff;color:var(--bad);margin-top:6px}
+.err{color:var(--bad);font-size:14px;min-height:20px;margin-top:8px}
+.auth{text-align:center;padding-top:60px}
+.auth .logo{font-size:46px}
+.hint{font-size:13px;color:var(--mute);margin-top:4px}
+</style>
+</head>
+<body>
+<main>
+
+<!-- Sign in / register -->
+<section id="auth" class="hidden auth">
+  <h1>Keisha Wallet</h1>
+  <p class="mute" id="authSub">Welcome back. Log in to see your wallet.</p>
+  <div class="card" style="text-align:left">
+    <label for="user">Username</label>
+    <input id="user" autocomplete="username" autocapitalize="none" placeholder="e.g. keisha">
+    <label for="pass">Password</label>
+    <input id="pass" type="password" autocomplete="current-password" placeholder="At least 6 characters">
+    <div class="err" id="authErr" role="alert"></div>
+    <button class="btn" id="authBtn">Log in</button>
+    <button class="link" id="authSwap" style="margin-top:10px;width:100%">First time here? Create your account</button>
+  </div>
+</section>
+
+<!-- Setup notice -->
+<section id="setup" class="hidden card">
+  <h2>One more step</h2>
+  <p>Paste your Firebase details into <b>firebaseConfig</b> near the bottom of index.html, then reload this page.</p>
+</section>
+
+<!-- App -->
+<section id="app" class="hidden">
+  <div class="top">
+    <div><h1 id="greet"></h1><div class="mute" id="period"></div></div>
+    <button class="icon-btn" id="gear" aria-label="Settings">&#9881;</button>
+  </div>
+
+  <div class="seg" role="tablist">
+    <button id="vMonth" class="on">Monthly</button>
+    <button id="vWeek">Weekly</button>
+  </div>
+
+  <div class="grid">
+    <div class="stat main"><span class="mute">Left</span><b id="sLeft"></b></div>
+    <div class="stat"><span class="mute">Money in</span><b id="sIn" class="in"></b></div>
+    <div class="stat"><span class="mute">Spent</span><b id="sOut"></b></div>
+  </div>
+
+  <div class="card">
+    <h2>Spending limit</h2>
+    <div class="bar"><i id="bar"></i></div>
+    <div class="mute" id="barTxt"></div>
+    <p class="nudge" id="nudge"></p>
+  </div>
+
+  <div class="card">
+    <h2>Where your money goes</h2>
+    <div class="donut" id="donut"></div>
+  </div>
+
+  <div class="card">
+    <h2>Savings jar</h2>
+    <div id="jar"></div>
+  </div>
+
+  <div class="card">
+    <h2>Activity</h2>
+    <div id="list"></div>
+  </div>
+</section>
+</main>
+
+<button class="fab hidden" id="fab">+ Add</button>
+
+<!-- Add / edit sheet -->
+<div class="shade hidden" id="txShade">
+  <div class="sheet" role="dialog" aria-label="Add entry">
+    <h2 id="txTitle">Add entry</h2>
+    <div class="seg" style="margin-top:0">
+      <button data-t="out" class="on">Expense</button>
+      <button data-t="in">Money in</button>
+      <button data-t="jar">To jar</button>
+    </div>
+    <label for="amt">Amount (RM)</label>
+    <input id="amt" inputmode="decimal" placeholder="0.00">
+    <div id="catWrap">
+      <label for="cat">Category</label>
+      <select id="cat"></select>
+      <input id="newCat" class="hidden" placeholder="New category name" style="margin-top:8px">
+    </div>
+    <label for="note">Note (optional)</label>
+    <input id="note" placeholder="e.g. lunch with friends">
+    <label for="date">Date</label>
+    <input id="date" type="date">
+    <div class="err" id="txErr" role="alert"></div>
+    <button class="btn" id="txSave">Save</button>
+    <button class="btn del hidden" id="txDel">Delete entry</button>
+    <button class="btn ghost" data-close>Cancel</button>
+  </div>
+</div>
+
+<!-- Settings sheet -->
+<div class="shade hidden" id="setShade">
+  <div class="sheet" role="dialog" aria-label="Settings">
+    <h2>Settings</h2>
+    <label for="limit">Monthly spending limit (RM)</label>
+    <input id="limit" inputmode="decimal" placeholder="e.g. 1000">
+    <div class="hint">The weekly limit is this amount divided by 4.</div>
+    <label for="gName">Savings goal name</label>
+    <input id="gName" placeholder="e.g. Trip to Langkawi">
+    <label for="gTarget">Savings goal amount (RM)</label>
+    <input id="gTarget" inputmode="decimal" placeholder="e.g. 1500">
+    <div class="err" id="setErr" role="alert"></div>
+    <button class="btn" id="setSave">Save settings</button>
+    <button class="btn del" id="logout">Log out</button>
+    <button class="btn ghost" data-close>Cancel</button>
+  </div>
+</div>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {getFirestore,doc,collection,onSnapshot,setDoc,addDoc,deleteDoc} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* ====== PASTE YOUR FIREBASE CONFIG HERE ====== */
+const firebaseConfig = {
+  apiKey: "PASTE_API_KEY",
+  authDomain: "PASTE_PROJECT.firebaseapp.com",
+  projectId: "PASTE_PROJECT_ID",
+  appId: "PASTE_APP_ID"
+};
+/* ============================================= */
+
+const $ = id => document.getElementById(id);
+const show = (id, on = true) => $(id).classList.toggle("hidden", !on);
+const DEFAULT_CATS = ["Food", "Misc", "Transport", "Shopping", "Bills"];
+const COLORS = ["#ff8fab", "#ffc2a1", "#f7a8c4", "#ffb88c", "#e58fb0", "#ffd6bd", "#d98aa8", "#f4a97f"];
+const S = {uid: null, tx: [], cfg: {limit: 0, cats: [], gName: "", gTarget: 0}, view: "month", type: "out", editId: null, register: false};
+const rm = n => "RM " + Number(n).toLocaleString("en-MY", {minimumFractionDigits: 2, maximumFractionDigits: 2});
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"}[c]));
+const toDate = s => new Date(s + "T00:00:00");
+const iso = d => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+
+if (firebaseConfig.apiKey.startsWith("PASTE")) { show("setup"); throw new Error("Firebase config missing"); }
+const app = initializeApp(firebaseConfig), auth = getAuth(app), db = getFirestore(app);
+
+/* ---------- Login / register ---------- */
+const emailOf = u => u.trim().toLowerCase().replace(/[^a-z0-9._-]/g, "") + "@keishawallet.app";
+function authMode(reg) {
+  S.register = reg;
+  $("authBtn").textContent = reg ? "Create account" : "Log in";
+  $("authSwap").textContent = reg ? "Already have an account? Log in" : "First time here? Create your account";
+  $("authSub").textContent = reg ? "Pick a username and password to get started." : "Welcome back. Log in to see your wallet.";
+  $("pass").autocomplete = reg ? "new-password" : "current-password";
+  $("authErr").textContent = "";
+}
+$("authSwap").onclick = () => authMode(!S.register);
+$("authBtn").onclick = async () => {
+  const u = $("user").value, p = $("pass").value;
+  if (!/[a-z0-9]/i.test(u)) { $("authErr").textContent = "Enter a username using letters or numbers."; return; }
+  try {
+    S.register ? await createUserWithEmailAndPassword(auth, emailOf(u), p) : await signInWithEmailAndPassword(auth, emailOf(u), p);
+  } catch (e) {
+    const m = {"auth/email-already-in-use": "That username is taken. Try another one.", "auth/weak-password": "Password needs at least 6 characters.",
+      "auth/invalid-credential": "Wrong username or password.", "auth/user-not-found": "No account with that username.",
+      "auth/wrong-password": "Wrong username or password.", "auth/too-many-requests": "Too many tries. Wait a moment and try again."};
+    $("authErr").textContent = m[e.code] || "Could not log in. Check your connection and try again.";
+  }
+};
+$("logout").onclick = async () => { await signOut(auth); location.reload(); };
+
+onAuthStateChanged(auth, user => {
+  if (!user) { show("app", false); show("fab", false); show("auth"); authMode(false); return; }
+  S.uid = user.uid; show("auth", false); show("app"); show("fab");
+  onSnapshot(collection(db, "users", S.uid, "tx"), snap => { S.tx = snap.docs.map(d => ({id: d.id, ...d.data()})); render(); });
+  onSnapshot(doc(db, "users", S.uid, "meta", "settings"), snap => { Object.assign(S.cfg, snap.data() || {}); render(); });
+});
+
+/* ---------- Dates and periods ---------- */
+function greeting() {
+  const h = new Date().getHours();
+  if (h >= 5 && h < 12) return "Good Morning Keisha \u{1F495}";
+  if (h >= 12 && h < 15) return "Good Afternoon Keisha \u{1F495}";
+  if (h >= 15 && h < 21) return "Good Evening Keisha \u{1F495}";
+  if (h >= 21 || h < 2) return "Good Night Keisha \u{1F495}";
+  return "Why your not sleeping harrr Keisha";
+}
+function period() {
+  const n = new Date(), y = n.getFullYear(), m = n.getMonth();
+  if (S.view === "month") return {a: new Date(y, m, 1), b: new Date(y, m + 1, 1), label: n.toLocaleDateString("en-MY", {month: "long", year: "numeric"}), word: "month"};
+  const back = (n.getDay() + 6) % 7, a = new Date(y, m, n.getDate() - back), b = new Date(y, m, n.getDate() - back + 7), last = new Date(b - 864e5);
+  const f = d => d.toLocaleDateString("en-MY", {day: "numeric", month: "short"});
+  return {a, b, label: f(a) + " to " + f(last), word: "week"};
+}
+
+/* ---------- Render ---------- */
+function render() {
+  if (!S.uid) return;
+  const P = period(), cats = [...DEFAULT_CATS, ...(S.cfg.cats || [])];
+  const inP = S.tx.filter(t => { const d = toDate(t.date); return d >= P.a && d < P.b; }).sort((x, y) => y.date.localeCompare(x.date));
+  const sum = type => inP.filter(t => t.type === type).reduce((s, t) => s + t.amount, 0);
+  const income = sum("in"), spent = sum("out"), jarIn = sum("jar"), left = income - spent - jarIn;
+
+  $("greet").textContent = greeting();
+  $("period").textContent = P.label;
+  $("vMonth").classList.toggle("on", S.view === "month");
+  $("vWeek").classList.toggle("on", S.view === "week");
+  $("sLeft").textContent = rm(left);
+  $("sIn").textContent = rm(income);
+  $("sOut").textContent = rm(spent);
+
+  const limit = S.view === "month" ? S.cfg.limit : S.cfg.limit / 4, pct = limit ? spent / limit : 0;
+  $("bar").style.width = Math.min(pct * 100, 100) + "%";
+  $("bar").style.background = pct >= 1 ? "var(--bad)" : pct >= .8 ? "var(--warn)" : "var(--ok)";
+  $("barTxt").textContent = limit ? rm(spent) + " of " + rm(limit) + " used this " + P.word : "No limit set yet";
+  const used = Math.round(pct * 100);
+  $("nudge").textContent = !limit ? "Set a spending limit in settings and I will cheer you on."
+    : pct >= 1 ? "Oops, you went over your limit this " + P.word + ". It happens. A fresh start is just around the corner."
+    : pct >= .8 ? "Careful, Keisha. " + used + "% of your limit is gone, so be gentle with your wallet."
+    : "You are doing lovely. Plenty of room left in your budget.";
+
+  // Donut chart
+  const by = {}; inP.filter(t => t.type === "out").forEach(t => by[t.cat] = (by[t.cat] || 0) + t.amount);
+  const rows = Object.entries(by).sort((x, y) => y[1] - x[1]);
+  let svg = '<svg viewBox="0 0 42 42" role="img" aria-label="Spending by category"><circle cx="21" cy="21" r="15.915" fill="none" stroke="#f6e1dc" stroke-width="6"/>', cum = 0;
+  rows.forEach(([c, v], i) => {
+    const p = v / spent * 100;
+    svg += `<circle cx="21" cy="21" r="15.915" fill="none" stroke="${COLORS[i % COLORS.length]}" stroke-width="6" stroke-dasharray="${p} ${100 - p}" stroke-dashoffset="${25 - cum}"/>`;
+    cum += p;
+  });
+  svg += `<text x="21" y="20.5" text-anchor="middle" font-size="3.2" fill="#a58a8f">Spent</text><text x="21" y="25" text-anchor="middle" font-size="3.6" font-weight="800" fill="#5a3942">${spent ? Math.round(spent) : 0}</text></svg>`;
+  $("donut").innerHTML = svg + '<div class="legend">' + (rows.length ? rows.map(([c, v], i) =>
+    `<div><i class="dot" style="background:${COLORS[i % COLORS.length]}"></i><span>${esc(c)}</span><b>${rm(v)}</b></div>`).join("")
+    : '<span class="mute">No spending yet. Tap Add to log your first expense.</span>') + "</div>";
+
+  // Savings jar (all time)
+  const saved = S.tx.filter(t => t.type === "jar").reduce((s, t) => s + t.amount, 0), tgt = S.cfg.gTarget || 0;
+  const jp = tgt ? Math.min(saved / tgt * 100, 100) : 0;
+  $("jar").innerHTML = S.cfg.gName
+    ? `<div class="jar-row"><div class="jar" aria-hidden="true"><i style="height:${jp}%"></i></div><div><b>${esc(S.cfg.gName)}</b><div class="mute">${rm(saved)} of ${rm(tgt)}</div><div class="mute">${Math.round(jp)}% there</div></div></div>`
+    : `<p class="mute" style="margin:0 0 6px">Saving for something special? Set a goal and fill your jar.</p><button class="link" id="goalBtn">Set a savings goal</button>`;
+  if ($("goalBtn")) $("goalBtn").onclick = openSettings;
+
+  // Activity list
+  $("list").innerHTML = inP.length ? inP.map(t => {
+    const sign = t.type === "in" ? "+" : "-", cls = t.type === "in" ? "in" : t.type === "jar" ? "jarc" : "";
+    const name = t.type === "in" ? "Money in" : t.type === "jar" ? "Savings jar" : t.cat;
+    return `<button class="row" data-id="${t.id}"><i class="dot" style="background:${t.type === "in" ? "var(--ok)" : "var(--pink)"}"></i><div class="t"><b>${esc(name)}${t.note ? " - " + esc(t.note) : ""}</b><span class="mute">${toDate(t.date).toLocaleDateString("en-MY", {day: "numeric", month: "short"})}</span></div><span class="amt ${cls}">${sign}${rm(t.amount)}</span></button>`;
+  }).join("") : '<p class="mute" style="margin:0">Nothing here yet. Tap Add to get started.</p>';
+  document.querySelectorAll(".row").forEach(r => r.onclick = () => openTx(r.dataset.id));
+
+  // Category dropdown
+  const cur = $("cat").value;
+  $("cat").innerHTML = cats.map(c => `<option>${esc(c)}</option>`).join("") + '<option value="__new">+ New category</option>';
+  if (cats.includes(cur)) $("cat").value = cur;
+}
+$("vMonth").onclick = () => { S.view = "month"; render(); };
+$("vWeek").onclick = () => { S.view = "week"; render(); };
+
+/* ---------- Add / edit sheet ---------- */
+function setType(t) {
+  S.type = t;
+  document.querySelectorAll("#txShade .seg button").forEach(b => b.classList.toggle("on", b.dataset.t === t));
+  show("catWrap", t === "out");
+}
+document.querySelectorAll("#txShade .seg button").forEach(b => b.onclick = () => setType(b.dataset.t));
+$("cat").onchange = () => { show("newCat", $("cat").value === "__new"); if ($("cat").value === "__new") $("newCat").focus(); };
+function openTx(id) {
+  const t = S.tx.find(x => x.id === id);
+  S.editId = t ? id : null;
+  $("txTitle").textContent = t ? "Edit entry" : "Add entry";
+  setType(t ? t.type : "out");
+  $("amt").value = t ? t.amount : "";
+  $("note").value = t ? t.note || "" : "";
+  $("date").value = t ? t.date : iso(new Date());
+  $("newCat").value = ""; show("newCat", false);
+  if (t && t.cat) $("cat").value = t.cat;
+  $("txErr").textContent = "";
+  show("txDel", !!t); show("txShade");
+  if (!t) $("amt").focus();
+}
+$("fab").onclick = () => openTx(null);
+$("txSave").onclick = async () => {
+  const amount = parseFloat($("amt").value.replace(",", "."));
+  if (!(amount > 0)) { $("txErr").textContent = "Enter an amount greater than 0."; return; }
+  if (!$("date").value) { $("txErr").textContent = "Pick a date."; return; }
+  let cat = $("cat").value;
+  if (S.type === "out" && cat === "__new") {
+    cat = $("newCat").value.trim();
+    if (!cat) { $("txErr").textContent = "Type a name for the new category."; return; }
+    if (![...DEFAULT_CATS, ...(S.cfg.cats || [])].some(c => c.toLowerCase() === cat.toLowerCase()))
+      await setDoc(doc(db, "users", S.uid, "meta", "settings"), {cats: [...(S.cfg.cats || []), cat]}, {merge: true});
+  }
+  const data = {type: S.type, amount: Math.round(amount * 100) / 100, cat: S.type === "out" ? cat : "", note: $("note").value.trim(), date: $("date").value};
+  try {
+    S.editId ? await setDoc(doc(db, "users", S.uid, "tx", S.editId), data) : await addDoc(collection(db, "users", S.uid, "tx"), data);
+    show("txShade", false);
+  } catch (e) { $("txErr").textContent = "Could not save. Check your connection and try again."; }
+};
+$("txDel").onclick = async () => {
+  if (!confirm("Delete this entry?")) return;
+  await deleteDoc(doc(db, "users", S.uid, "tx", S.editId)); show("txShade", false);
+};
+
+/* ---------- Settings ---------- */
+function openSettings() {
+  $("limit").value = S.cfg.limit || ""; $("gName").value = S.cfg.gName || ""; $("gTarget").value = S.cfg.gTarget || "";
+  $("setErr").textContent = ""; show("setShade");
+}
+$("gear").onclick = openSettings;
+$("setSave").onclick = async () => {
+  const num = v => parseFloat(String(v).replace(",", ".")) || 0;
+  const limit = num($("limit").value), gTarget = num($("gTarget").value), gName = $("gName").value.trim();
+  if (gName && !(gTarget > 0)) { $("setErr").textContent = "Add an amount for your savings goal."; return; }
+  try { await setDoc(doc(db, "users", S.uid, "meta", "settings"), {limit, gName, gTarget}, {merge: true}); show("setShade", false); }
+  catch (e) { $("setErr").textContent = "Could not save. Check your connection and try again."; }
+};
+
+/* ---------- Close sheets ---------- */
+document.querySelectorAll("[data-close]").forEach(b => b.onclick = () => { show("txShade", false); show("setShade", false); });
+document.querySelectorAll(".shade").forEach(s => s.onclick = e => { if (e.target === s) s.classList.add("hidden"); });
+</script>
+</body>
+</html>
